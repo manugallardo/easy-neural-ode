@@ -606,4 +606,7 @@ def run():
 
 
 if __name__ == "__main__":
+    # check if using gpu
+    from jax.lib import xla_bridge
+    print(xla_bridge.get_backend().platform)
     run()
