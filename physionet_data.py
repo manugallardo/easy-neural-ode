@@ -339,12 +339,17 @@ def normalize_masked_data(data, mask, att_min, att_max):
     Normalize masked data.
     """
     # we don't want to divide by zero
-    att_max[att_max == 0] = 1
-
-    data_norm = (data - att_min) / att_max
-
+    # att_max[att_max == 0] = 1
+    
+    # will fail since jax array is inmutable
+    # this is a work around
+    oatt_min = onp.asarray(att_min)
+    oatt_max = onp.asarray(att_max)
+    oatt_max[oatt_max == 0] = 1
+    odata_norm = (data - oatt_min) / oatt_max
     # set masked out elements back to zero
-    data_norm[mask == 0] = 0
+    odata_norm[mask == 0] = 0
+    data_norm = jnp.asarray(odata_norm)    
 
     return data_norm
 
